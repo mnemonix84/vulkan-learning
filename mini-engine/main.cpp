@@ -74,6 +74,12 @@ void *MemoryArena_PushSize(memory_arena *Arena, u32 Size)
 	return Result;
 }
 
+#define MemoryArena_PushType(Arena, Type) \
+	(Type *)MemoryArena_PushSize((Arena), sizeof(Type))
+
+#define MemoryArena_PushArray(Arena, Type, Count) \
+	(Type *)MemoryArena_PushSize((Arena), (Count)*sizeof(Type))
+
 struct memory_arena_temporary
 {
 	memory_arena *MemoryArena;
@@ -144,7 +150,115 @@ void MemoryArena_EndTemporary(memory_arena_temporary *Marker)
 	Macro(vkDestroySwapchainKHR) \
 	Macro(vkGetSwapchainImagesKHR) \
 	Macro(vkAcquireNextImageKHR) \
-	Macro(vkQueuePresentKHR)
+	Macro(vkQueuePresentKHR) \
+	Macro(vkCreateFence) \
+	Macro(vkDestroyFence) \
+	Macro(vkGetFenceStatus) \
+	Macro(vkResetFences) \
+	Macro(vkWaitForFences) \
+	Macro(vkCreateSemaphore) \
+	Macro(vkDestroySemaphore) \
+	Macro(vkCreateEvent) \
+	Macro(vkDestroyEvent) \
+	Macro(vkGetEventStatus) \
+	Macro(vkSetEvent) \
+	Macro(vkResetEvent) \
+	Macro(vkCmdSetEvent) \
+	Macro(vkCmdResetEvent) \
+	Macro(vkCmdWaitEvents) \
+	Macro(vkCmdPipelineBarrier) \
+	Macro(vkQueueWaitIdle) \
+	Macro(vkDeviceWaitIdle) \
+	Macro(vkCreateRenderPass) \
+	Macro(vkDestroyRenderPass) \
+	Macro(vkCreateFramebuffer) \
+	Macro(vkDestroyFramebuffer) \
+	Macro(vkCmdBeginRenderPass) \
+	Macro(vkGetRenderAreaGranularity) \
+	Macro(vkCmdNextSubpass) \
+	Macro(vkCmdEndRenderPass) \
+	Macro(vkCreateShaderModule) \
+	Macro(vkDestroyShaderModule) \
+	Macro(vkCreateComputePipelines) \
+	Macro(vkCreateGraphicsPipelines) \
+	Macro(vkDestroyPipeline) \
+	Macro(vkCreatePipelineCache) \
+	Macro(vkMergePipelineCaches) \
+	Macro(vkGetPipelineCacheData) \
+	Macro(vkDestroyPipelineCache) \
+	Macro(vkCmdBindPipeline) \
+	Macro(vkGetPhysicalDeviceMemoryProperties) \
+	Macro(vkAllocateMemory) \
+	Macro(vkFreeMemory) \
+	Macro(vkMapMemory) \
+	Macro(vkFlushMappedMemoryRanges) \
+	Macro(vkInvalidateMappedMemoryRanges) \
+	Macro(vkUnmapMemory) \
+	Macro(vkCreateBuffer) \
+	Macro(vkDestroyBuffer) \
+	Macro(vkCreateBufferView) \
+	Macro(vkDestroyBufferView) \
+	Macro(vkCreateImage) \
+	Macro(vkGetImageSubresourceLayout) \
+	Macro(vkDestroyImage) \
+	Macro(vkCreateImageView) \
+	Macro(vkDestroyImageView) \
+	Macro(vkGetBufferMemoryRequirements) \
+	Macro(vkGetImageMemoryRequirements) \
+	Macro(vkBindBufferMemory) \
+	Macro(vkBindImageMemory) \
+	Macro(vkCreateSampler) \
+	Macro(vkDestroySampler) \
+	Macro(vkCreateDescriptorSetLayout) \
+	Macro(vkGetDescriptorSetLayoutSupport) \
+	Macro(vkDestroyDescriptorSetLayout) \
+	Macro(vkCreatePipelineLayout) \
+	Macro(vkDestroyPipelineLayout) \
+	Macro(vkCreateDescriptorPool) \
+	Macro(vkDestroyDescriptorPool) \
+	Macro(vkAllocateDescriptorSets) \
+	Macro(vkFreeDescriptorSets) \
+	Macro(vkResetDescriptorPool) \
+	Macro(vkUpdateDescriptorSets) \
+	Macro(vkCmdBindDescriptorSets) \
+	Macro(vkCmdPushConstants) \
+	Macro(vkCmdClearColorImage) \
+	Macro(vkCmdClearDepthStencilImage) \
+	Macro(vkCmdClearAttachments) \
+	Macro(vkCmdFillBuffer) \
+	Macro(vkCmdUpdateBuffer) \
+	Macro(vkCreateQueryPool) \
+	Macro(vkDestroyQueryPool) \
+	Macro(vkCmdResetQueryPool) \
+	Macro(vkCmdBeginQuery) \
+	Macro(vkCmdEndQuery) \
+	Macro(vkGetQueryPoolResults) \
+	Macro(vkCmdCopyQueryPoolResults) \
+	Macro(vkCmdWriteTimestamp) \
+	Macro(vkCmdBindIndexBuffer) \
+	Macro(vkCmdDraw) \
+	Macro(vkCmdDrawIndexed) \
+	Macro(vkCmdDrawIndirect) \
+	Macro(vkCmdDrawIndexedIndirect) \
+	Macro(vkCmdCopyBuffer) \
+	Macro(vkCmdCopyImage) \
+	Macro(vkCmdCopyBufferToImage) \
+	Macro(vkCmdCopyImageToBuffer) \
+	Macro(vkCmdBlitImage) \
+	Macro(vkCmdResolveImage) \
+	Macro(vkCmdSetViewport) \
+	Macro(vkCmdSetLineWidth) \
+	Macro(vkCmdSetDepthBias) \
+	Macro(vkCmdSetBlendConstants) \
+	Macro(vkCmdBindVertexBuffers	) \
+	Macro(vkCmdSetScissor) \
+	Macro(vkCmdSetDepthBounds) \
+	Macro(vkCmdSetStencilCompareMask) \
+	Macro(vkCmdSetStencilWriteMask) \
+	Macro(vkCmdSetStencilReference) \
+	Macro(vkCmdDispatch) \
+	Macro(vkCmdDispatchIndirect) \
+	Macro(vkCmdDispatchBase)
 
 #define VULKAN_DEFINE_FUNCTION(Name) \
 	PFN_##Name Name;
@@ -195,6 +309,7 @@ struct vulkan_context
 	bool UseVerticalSync;
 	u32 SwapchainImageCount;
 	VkCommandPool GraphicsCommandPool;
+	VkImage *SwapchainImages;
 };
 
 void DebugPrintf(const char *Format, ...)
@@ -251,14 +366,14 @@ void Vulkan_Initialize(vulkan_context *Context)
 	VkLayerProperties *InstanceLayerProps = nullptr;
 
 	VULKAN_CHECK(Context->vkEnumerateInstanceLayerProperties(&InstanceLayerPropsCount, nullptr));
-	InstanceLayerProps = (VkLayerProperties *)MemoryArena_PushSize(&Context->TransientMemory, InstanceLayerPropsCount*sizeof(VkLayerProperties));
+	InstanceLayerProps = MemoryArena_PushArray(&Context->TransientMemory, VkLayerProperties, InstanceLayerPropsCount);
 	VULKAN_CHECK(Context->vkEnumerateInstanceLayerProperties(&InstanceLayerPropsCount, InstanceLayerProps));
 
 	u32 InstanceExtensionPropsCount = 0;
 	VkExtensionProperties *InstanceExtensionProps = nullptr;
 
 	VULKAN_CHECK(Context->vkEnumerateInstanceExtensionProperties(nullptr, &InstanceExtensionPropsCount, nullptr));
-	InstanceExtensionProps = (VkExtensionProperties *)MemoryArena_PushSize(&Context->TransientMemory, InstanceExtensionPropsCount*sizeof(VkExtensionProperties));
+	InstanceExtensionProps = MemoryArena_PushArray(&Context->TransientMemory, VkExtensionProperties, InstanceExtensionPropsCount);
 	VULKAN_CHECK(Context->vkEnumerateInstanceExtensionProperties(nullptr, &InstanceExtensionPropsCount, InstanceExtensionProps));
 	
 	int LayerCount = 0;
@@ -394,7 +509,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 	VkPhysicalDevice *PhysicalDevices = nullptr;
 
 	VULKAN_CHECK(Context->vkEnumeratePhysicalDevices(Context->Instance, &PhysicalDeviceCount, nullptr));
-	PhysicalDevices = (VkPhysicalDevice *)MemoryArena_PushSize(&Context->TransientMemory, PhysicalDeviceCount*sizeof(VkPhysicalDevice));
+	PhysicalDevices = MemoryArena_PushArray(&Context->TransientMemory, VkPhysicalDevice, PhysicalDeviceCount);
 	VULKAN_CHECK(Context->vkEnumeratePhysicalDevices(Context->Instance, &PhysicalDeviceCount, PhysicalDevices));
 
 	for (int PhysicalDeviceIndex = 0;
@@ -413,7 +528,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 		VkQueueFamilyProperties *QueueFamilies = nullptr;
 
 		Context->vkGetPhysicalDeviceQueueFamilyProperties(CurrentPhysicalDevice, &QueueFamilyCount, nullptr);
-		QueueFamilies = (VkQueueFamilyProperties *)MemoryArena_PushSize(&Context->TransientMemory, QueueFamilyCount*sizeof(VkQueueFamilyProperties));
+		QueueFamilies = MemoryArena_PushArray(&Context->TransientMemory, VkQueueFamilyProperties, QueueFamilyCount);
 		Context->vkGetPhysicalDeviceQueueFamilyProperties(CurrentPhysicalDevice, &QueueFamilyCount, QueueFamilies);
 
 		for (int QueueFamilyIndex = 0;
@@ -495,7 +610,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 
 			u32 DeviceLayerPropsCount = 0;
 			VULKAN_CHECK(Context->vkEnumerateDeviceLayerProperties(Context->PhysicalDevice, &DeviceLayerPropsCount, nullptr));
-			VkLayerProperties *DeviceLayerProps = (VkLayerProperties *)MemoryArena_PushSize(&Context->TransientMemory, DeviceLayerPropsCount*sizeof(VkLayerProperties));
+			VkLayerProperties *DeviceLayerProps = MemoryArena_PushArray(&Context->TransientMemory, VkLayerProperties, DeviceLayerPropsCount);
 			VULKAN_CHECK(Context->vkEnumerateDeviceLayerProperties(Context->PhysicalDevice, &DeviceLayerPropsCount, DeviceLayerProps));
 
 			int LayerCount = 0;
@@ -503,7 +618,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 
 			u32 DeviceExtensionPropsCount = 0;
 			VULKAN_CHECK(Context->vkEnumerateDeviceExtensionProperties(Context->PhysicalDevice, nullptr, &DeviceExtensionPropsCount, nullptr));
-			VkExtensionProperties *DeviceExtensionProps = (VkExtensionProperties *)MemoryArena_PushSize(&Context->TransientMemory, DeviceExtensionPropsCount*sizeof(VkExtensionProperties));
+			VkExtensionProperties *DeviceExtensionProps = MemoryArena_PushArray(&Context->TransientMemory, VkExtensionProperties, DeviceExtensionPropsCount);
 			VULKAN_CHECK(Context->vkEnumerateDeviceExtensionProperties(Context->PhysicalDevice, nullptr, &DeviceExtensionPropsCount, DeviceExtensionProps));
 
 			int ExtensionCount = 0;
@@ -532,7 +647,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 
 			u32 SurfaceFormatCount = 0;
 			VULKAN_CHECK(Context->vkGetPhysicalDeviceSurfaceFormatsKHR(Context->PhysicalDevice, Context->Surface, &SurfaceFormatCount, nullptr));
-			VkSurfaceFormatKHR *SurfaceFormats = (VkSurfaceFormatKHR *)MemoryArena_PushSize(&Context->TransientMemory, SurfaceFormatCount*sizeof(VkSurfaceFormatKHR));
+			VkSurfaceFormatKHR *SurfaceFormats = MemoryArena_PushArray(&Context->TransientMemory, VkSurfaceFormatKHR, SurfaceFormatCount);
 			VULKAN_CHECK(Context->vkGetPhysicalDeviceSurfaceFormatsKHR(Context->PhysicalDevice, Context->Surface, &SurfaceFormatCount, SurfaceFormats));
 
 			bool SurfaceFormatFound = false;
@@ -557,7 +672,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 
 			u32 PresentModeCount = 0;
 			VULKAN_CHECK(Context->vkGetPhysicalDeviceSurfacePresentModesKHR(Context->PhysicalDevice, Context->Surface, &PresentModeCount, nullptr));
-			VkPresentModeKHR *PresentModes = (VkPresentModeKHR *)MemoryArena_PushSize(&Context->TransientMemory, PresentModeCount*sizeof(VkPresentModeKHR));
+			VkPresentModeKHR *PresentModes = MemoryArena_PushArray(&Context->TransientMemory, VkPresentModeKHR, PresentModeCount);
 			VULKAN_CHECK(Context->vkGetPhysicalDeviceSurfacePresentModesKHR(Context->PhysicalDevice, Context->Surface, &PresentModeCount, PresentModes));
 
 			bool PresentModeFound = false;
@@ -616,7 +731,7 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 			if (Context->SwapchainImageCount > SurfaceCaps.maxImageCount)
 				Context->SwapchainImageCount = SurfaceCaps.maxImageCount;
 
-			if (SurfaceCaps.currentExtent.width != 0xffffffff)
+			if (SurfaceCaps.currentExtent.width != 0xFFFFFFFF)
 			{
 				if (Context->Width < SurfaceCaps.minImageExtent.width)
 					Context->Width = SurfaceCaps.minImageExtent.width;
@@ -663,6 +778,11 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 
 			VULKAN_DEVICE_FUNCTIONS(VULKAN_LOAD_DEVICE_FUNCTION)
 
+			Context->vkGetDeviceQueue(Context->Device, Context->GraphicsQueueIndex, 0, &Context->GraphicsQueue);
+
+			if (Context->TransferQueueIndex != -1)
+				Context->vkGetDeviceQueue(Context->Device, Context->TransferQueueIndex, 0, &Context->TransferQueue);
+
 			VkSwapchainCreateInfoKHR SwapchainCI = {};
 			SwapchainCI.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 			SwapchainCI.surface = Context->Surface;
@@ -684,10 +804,9 @@ void Vulkan_SelectDevice(vulkan_context *Context)
 
 			VULKAN_CHECK(Context->vkCreateSwapchainKHR(Context->Device, &SwapchainCI, nullptr, &Context->Swapchain));
 
-			Context->vkGetDeviceQueue(Context->Device, Context->GraphicsQueueIndex, 0, &Context->GraphicsQueue);
-
-			if (Context->TransferQueueIndex != -1)
-				Context->vkGetDeviceQueue(Context->Device, Context->TransferQueueIndex, 0, &Context->TransferQueue);
+			VULKAN_CHECK(Context->vkGetSwapchainImagesKHR(Context->Device, Context->Swapchain, &Context->SwapchainImageCount, nullptr));
+			Context->SwapchainImages = MemoryArena_PushArray(&Context->PersistentMemory, VkImage, Context->SwapchainImageCount);
+			VULKAN_CHECK(Context->vkGetSwapchainImagesKHR(Context->Device, Context->Swapchain, &Context->SwapchainImageCount, Context->SwapchainImages));
 
 			VkCommandPoolCreateInfo CommandPoolCI = {};
 			CommandPoolCI.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -736,7 +855,7 @@ int WINAPI WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, PSTR CmdLine, int
 		MemoryArena_Init(&TransientMemory, Memory, Size);
 	}
 
-	vulkan_context *Context = (vulkan_context *)MemoryArena_PushSize(&PersistentMemory, sizeof(vulkan_context));
+	vulkan_context *Context = MemoryArena_PushType(&PersistentMemory, vulkan_context);
 	Context->PersistentMemory = PersistentMemory;
 	Context->TransientMemory = TransientMemory;
 
