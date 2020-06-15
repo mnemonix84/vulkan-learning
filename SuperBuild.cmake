@@ -1,0 +1,24 @@
+include(ExternalProject)
+
+ExternalProject_Add(glfw
+    PREFIX glfw
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/externals/glfw"
+    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw-build"
+    INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw-install"
+    CMAKE_ARGS
+        -DGLFW_BUILD_DOCS:BOOL=OFF
+        -DGLFW_BUILD_EXAMPLES:BOOL=OFF
+        -DGLFW_BUILD_TESTS:BOOL=OFF
+        -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/glfw-install
+)
+
+ExternalProject_Add(${CMAKE_PROJECT_NAME}
+    PREFIX ${CMAKE_PROJECT_NAME}
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
+    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}-build"
+    INSTALL_COMMAND ""
+    CMAKE_ARGS
+        -D${CMAKE_PROJECT_NAME}_Superbuild:BOOL=OFF
+        -Dglfw3_DIR:PATH=${CMAKE_CURRENT_BINARY_DIR}/glfw-install/lib/cmake/glfw3
+    DEPENDS glfw
+)
