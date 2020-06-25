@@ -21,11 +21,14 @@ target_compile_definitions(${CMAKE_PROJECT_NAME}
     PRIVATE
         VMA_STATIC_VULKAN_FUNCTIONS=0
         VMA_DYNAMIC_VULKAN_FUNCTIONS=0
-        VULKAN_NO_PROTOTYPES)
+        VK_NO_PROTOTYPES)
 
 if(MSVC)
     target_link_libraries(${CMAKE_PROJECT_NAME} $ENV{VULKAN_SDK}/Lib/shaderc_shared.lib)
     target_compile_definitions(${CMAKE_PROJECT_NAME}
         PRIVATE
             _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(${CMAKE_PROJECT_NAME}
+        PRIVATE
+            /permissive-)
 endif()
